@@ -131,23 +131,25 @@ class SplitWorkflow:
     def create_replica_catalog(self):
         self.rc = ReplicaCatalog()
 
-        # Add f.a replica
+        # This is the input data we will be using
         self.rc.add_replica(
-            "local", "covid.csv", os.path.join(
-                self.wf_dir, "input", "covid.csv")
+            "local", "test.csv", os.path.join(
+                self.wf_dir, "input", "test.csv")
         )
+        # Output data is added to the replica with
+        # the register_replica options in the workflow section
 
     # --- Create Workflow -----------------------------------------------------
     def create_workflow(self):
         self.wf = Workflow(self.wf_name, infer_dependencies=True)
+        # Defines the test file
+        test_file = File("test.csv")
 
-        webpage = File("covid.csv")
-
-        # the split job that splits the webpage into smaller chunks
+        # the split job that splits the test file into smaller chunks
         split = (
             Job("split")
-            .add_args("-n", "4", "-a", "1", webpage, "part.")
-            .add_inputs(webpage)
+            .add_args("-n", "4", "-a", "1", test_file, "part.")
+            .add_inputs(test_file)
             .add_pegasus_profile(label="p1")
         )
 
@@ -155,9 +157,7 @@ class SplitWorkflow:
         for c in "abcd":
             part = File("part.%s" % c)
             split.add_outputs(part, stage_out=True, register_replica=True)
-
             count = File("count.txt.%s" % c)
-
             wc = (
                 Job("wc")
                 .add_args("-l", part)
