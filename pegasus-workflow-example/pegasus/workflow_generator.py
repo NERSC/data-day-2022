@@ -38,11 +38,12 @@ class SplitWorkflow:
     # --- Configuration (Pegasus Properties) ----------------------------------
     def create_pegasus_properties(self):
         self.props = Properties()
+        # Tells Pegasus to try and create symlinks for input files
+        self.props["pegasus.transfer.links"] = "true"
 
-        # props["pegasus.monitord.encoding"] = "json"
-        # self.properties["pegasus.integrity.checking"] = "none"
-        return
-        # --- Write files in directory --------------------------------------------
+        # Tells Pegasus to by the staging site ( creation of stage-in jobs) as
+        # data is available directly on compute nodes
+        self.props["pegasus.transfer.bypass.input.staging"] = "true"
 
     def write(self):
         # if not self.sc is None:
@@ -105,13 +106,25 @@ class SplitWorkflow:
     def create_transformation_catalog(self, exec_site_name="perlmutter"):
         self.tc = TransformationCatalog()
 
+        # Create a container to run exes in
+        ubuntu = Container(
+            "ubuntu",
+            Container.SHIFTER,
+            image="shifter:///ubuntu:latest"
+        )
+        # Add it to the yml file
+        self.tc.add_containers(ubuntu)
+
+        # Create transforms or exes
         wc = Transformation(
             "wc", site=exec_site_name, pfn="/usr/bin/wc", is_stageable=False,
         )
+        # The split command will be run in the container
         split = Transformation(
             "split", site=exec_site_name, pfn="/usr/bin/split", is_stageable=False,
+            container=ubuntu
         )
-
+        # Add the exes to the yml file
         self.tc.add_transformations(split, wc)
 
     # --- Replica Catalog ------------------------------------------------------
