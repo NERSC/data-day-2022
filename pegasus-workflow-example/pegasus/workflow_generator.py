@@ -106,23 +106,12 @@ class SplitWorkflow:
     def create_transformation_catalog(self, exec_site_name="perlmutter"):
         self.tc = TransformationCatalog()
 
-        # Create a container to run exes in
-        ubuntu = Container(
-            "ubuntu",
-            Container.SHIFTER,
-            image="shifter:///ubuntu:latest"
-        )
-        # Add it to the yml file
-        self.tc.add_containers(ubuntu)
-
-        # Create transforms or exes
+        # Create transforms for exes
         wc = Transformation(
             "wc", site=exec_site_name, pfn="/usr/bin/wc", is_stageable=False,
         )
-        # The split command will be run in the container
         split = Transformation(
-            "split", site=exec_site_name, pfn="/usr/bin/split", is_stageable=False,
-            container=ubuntu
+            "split", site=exec_site_name, pfn="/usr/bin/split", is_stageable=False
         )
         # Add the exes to the yml file
         self.tc.add_transformations(split, wc)
