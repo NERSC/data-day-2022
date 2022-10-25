@@ -50,7 +50,7 @@ The current method for running HTCondor on perlmutter takes advantage of scronta
 
 # Starting a pegasus workflow
 
-Once we have all the componenets needed we can start building our workflow in pegasus using the python api. There is an example workflow to split a file and count the lines in [workflow_generator.py](workflow_generator.py).
+Once we have all the componenets needed we can start building our workflow in pegasus using the python api. There is an example workflow to split a file and count the lines in [workflow_generator.py](pegasus/workflow_generator.py).
 
 ```
 (pegasus) $ python workflow_generator.py 
