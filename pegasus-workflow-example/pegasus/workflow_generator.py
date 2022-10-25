@@ -45,8 +45,8 @@ class SplitWorkflow:
         # --- Write files in directory --------------------------------------------
 
     def write(self):
-        if not self.sc is None:
-            self.sc.write()
+        # if not self.sc is None:
+        #     self.sc.write()
         self.props.write()
         self.tc.write()
         self.rc.write()
@@ -166,6 +166,7 @@ if __name__ == "__main__":
         "--sites_catalog",
         action="store_true",
         help="Skip site catalog creation",
+        default=False
     )
     parser.add_argument(
         "-e",
@@ -188,7 +189,7 @@ if __name__ == "__main__":
 
     workflow = SplitWorkflow(args.output)
 
-    if not args.sites_catalog:
+    if args.sites_catalog:
         print("Creating execution sites...")
         workflow.create_sites_catalog(args.execution_site_name)
 
