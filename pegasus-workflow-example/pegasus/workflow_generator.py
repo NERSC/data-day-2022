@@ -144,17 +144,18 @@ class SplitWorkflow:
         self.wf = Workflow(self.wf_name, infer_dependencies=True)
         # Defines the test file
         test_file = File("test.csv")
-
+        num_splits = 4
         # the split job that splits the test file into smaller chunks
         split = (
             Job("split")
-            .add_args("-n", "4", "-a", "1", test_file, "part.")
+            .add_args("-n", num_splits, "-d", "-a", 1, test_file, "part.")
             .add_inputs(test_file)
             .add_pegasus_profile(label="p1")
         )
+        self.wf.add_jobs(split)
 
         # we do a parmeter sweep on the first 4 chunks created
-        for c in "abcd":
+        for c in range(num_splits):
             part = File("part.%s" % c)
             split.add_outputs(part, stage_out=True, register_replica=True)
             count = File("count.txt.%s" % c)
@@ -167,8 +168,6 @@ class SplitWorkflow:
             )
 
             self.wf.add_jobs(wc)
-
-        self.wf.add_jobs(split)
 
 
 if __name__ == "__main__":
