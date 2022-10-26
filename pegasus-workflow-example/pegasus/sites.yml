@@ -1,0 +1,56 @@
+x-pegasus:
+  apiLang: python
+  createdBy: tylern
+  createdOn: 10-12-22T09:09:36Z
+pegasus: '5.0'
+sites:
+- name: local
+  directories:
+  - type: sharedScratch
+    path: /pscratch/sd/t/tylern/pegasus/scratch
+    sharedFileSystem: false
+    fileServers:
+    - url: file:///pscratch/sd/t/tylern/pegasus/scratch
+      operation: all
+  - type: localStorage
+    path: /pscratch/sd/t/tylern/pegasus/output
+    sharedFileSystem: false
+    fileServers:
+    - url: file:///pscratch/sd/t/tylern/pegasus/output
+      operation: all
+- name: perlmutter
+  directories:
+  - type: sharedScratch
+    path: /pscratch/sd/t/tylern/pegasus/scratch
+    sharedFileSystem: false
+    fileServers:
+    - url: file:///pscratch/sd/t/tylern/pegasus/scratch
+      operation: all
+  - type: sharedStorage
+    path: /pscratch/sd/t/tylern/pegasus/storage
+    sharedFileSystem: false
+    fileServers:
+    - url: file:///pscratch/sd/t/tylern/pegasus/storage
+      operation: all
+  grids:
+  - type: batch
+    contact: ${NERSC_USER}@saul-p1.nersc.gov
+    scheduler: slurm
+    jobtype: compute
+  profiles:
+    globus:
+      totalmemory: 4096
+    condor:
+      grid_resource: batch slurm
+    env:
+      PEGASUS_HOME: ${NERSC_PEGASUS_HOME}
+    pegasus:
+      style: glite
+      data.configuration: sharedfs
+      project: nstaff
+      change.dir: 'true'
+      create.dir: 'true'
+      glite.arguments: -C cpu -q shared
+      cores: '2'
+      runtime: '1200'
+      nodes: 1

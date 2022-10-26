@@ -1,0 +1,6 @@
+
+pegasus-workflow-example/pegasus/pegasus.properties
+pegasus-workflow-example/pegasus/replicas.yml
+pegasus-workflow-example/pegasus/transformations.yml
+pegasus-workflow-example/pegasus/us-counties-2021.csv
+pegasus-workflow-example/pegasus/workflow.yml
